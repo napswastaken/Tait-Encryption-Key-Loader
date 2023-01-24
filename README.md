@@ -62,10 +62,9 @@ It has been built with Qt Creator on Fedora 27, and should work on any Qt
 enabled system. To make it work for you, open up QtCreator IDE and open the
 .pro file for the project, then away you go.
 
-You should be able to read keys from any TM8200 or TM9100 style radio.
+You should be able to read keys from any TM8200 or TM9100 radio.
 
-NOTE: The intention for this software is to allow amateurs / enthusiasts of
-second hand tait radio's the chance to extend the life and usefulness of their
+NOTE: The intention for this software is to tait radio's the chance to extend the life and usefulness of their
 radios while promoting increased user knowledge. It will not be expanded to
 include front line / latest models - this tool is for old worn out and
 otherwise decrepid radios. If you want a nice shiny feature loaded
