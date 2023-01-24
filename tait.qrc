@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cross.png</file>
+        <file>tick.png</file>
+        <file>taitrnd.png</file>
+        <file>myappico.ico</file>
+        <file>9100a.jpg</file>
+    </qresource>
+</RCC>
