@@ -1,0 +1,15 @@
+This program compiles in Qt for Windows using:
+- Qt_5.9.2 MinGW 32bit kit
+- MinGW tools (only 32 bit required)
+Ensure shadow building is enabled, otherwise it will not compile
+Ensure MinGW gcc/g++ is installed and in the tools are in your %PATH%.... for me this was adding:
+C:\Qt\5.9.2\mingw32_32\bin
+C:\Qt\Tools\mingw530_32\bin
+
+Fire up Qt Creator, configure the project to use the MinGW 32 bit kit as the compiler (I didn't enable the rest - no point - they didn't work)
+Compile a release version, there should be no errors.
+This should create release and debug shadow build directories.... go to the release directory
+(For me: <some directory>\build-taitSFELoader-Desktop_Qt_5_9_2_MinGW_32bit-Release\release)
+Run windeployqt taitSFELoader-1.14 (or whatever the exe name is)
+
+Done.
