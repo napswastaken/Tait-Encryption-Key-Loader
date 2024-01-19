@@ -179,9 +179,9 @@ void KeyloaderDialog::on_cmbKeyType_currentIndexChanged(const QString &arg1) {
         length = 16;
     }
     if ( arg1 == "AES") {
-        length = 32;
+        length = 64;
     }
-    ui->txtKey->setValidator(new QRegExpValidator (QRegExp("[0-9A-Fa-f]{1,32}"), this));
+    ui->txtKey->setValidator(new QRegExpValidator (QRegExp("[0-9A-Fa-f]{1,64}"), this));
     ui->txtKey->setText("");
     ui->txtKey->setMaxLength(length);
 }
@@ -189,7 +189,7 @@ void KeyloaderDialog::on_cmbKeyType_currentIndexChanged(const QString &arg1) {
 void KeyloaderDialog::on_butAddKey_clicked() {
     if (
             ( ui->txtKey->text().length() != 16 && ui->cmbKeyType->currentText() == "DES" ) ||
-            ( ui->txtKey->text().length() != 32 && ui->cmbKeyType->currentText() == "AES" )
+            ( ui->txtKey->text().length() != 64 && ui->cmbKeyType->currentText() == "AES" )
     ) {
         QMessageBox::critical(this, "Error", "Key length is not valid", QMessageBox::Ok);
         return;

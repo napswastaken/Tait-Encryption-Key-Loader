@@ -35,18 +35,24 @@ static const QString TAIT_8000_UNK2 = "0000000100040009000900020003000500060007"
 
 // List of features different models have. Restrict to only known functions to make sure we don't cause problems.
 static const QStringList TM8200_FEATURES = QString("00 01 02 05 06 07 08 09 0A 35").split(" ");
+
 static const QStringList TM9100_FEATURES = QString("05 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F 20 21 22 23 25 26 27 29 2A 2B 2C 35 3B 3F 44").split(" ");
-static const QStringList TM9300_FEATURES = QString("1A 1F 2A 2D 32 33 35 39 3B 40 41 43 48 49 4B 4C 4D 4E").split(" ");
 static const QStringList TP9100_FEATURES = QString("05 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F 21 22 23 25 29 2A 2B 35 3B 3F 44").split(" ");
+
+static const QStringList TM9300_FEATURES = QString("01 1A 1C 1F 2A 2D 32 33 35 39 3B 40 41 43 48 49 4B 4C 4D 4E").split(" ");
+static const QStringList TP9300_FEATURES = QString("01 1A 1C 1F 2A 2D 32 33 34 35 39 3B 40 41 43 48 49 4B 4D").split(" ");
+
+static const QStringList TM9400_FEATURES = QString("05 15 16 17 18 19 1A 1B 1C 1D 1E 1F 20 21 22 23 25 26 27 29 2A 2B 2C 2D 35 38 39 3B 3D 3E 3F 44 46 48 49 4E 4F").split(" ");
+static const QStringList TP9400_FEATURES = QString("05 14 15 17 18 19 1A 1B 1C 1D 1E 1F 21 22 23 25 29 2A 2B 2D 34 35 38 39 3B 3D 3E 3F 44 46 48 49 4F").split(" ");
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 #ifndef QT_DEBUG
     ui->menuDebug->setVisible(false);
 #endif
-    QApplication::setApplicationVersion("1.18");
+    QApplication::setApplicationVersion("1.19");
     QApplication::setApplicationName("Tait Key Management Utility");
-    this->setWindowTitle(QApplication::applicationName() + " ver " + QApplication::applicationVersion());
+    this->setWindowTitle(QApplication::applicationName() + " - v" + QApplication::applicationVersion());
     myPorts = QSerialPortInfo::availablePorts();
     TAIT_RADIO_CONNECTED = false;
     canExit=true;
@@ -180,8 +186,11 @@ void MainWindow::on_butInspect_clicked() {
             if ( radioInfo["MODEL"].startsWith("TM8200") && ! TM8200_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM8200 series
             if ( radioInfo["MODEL"].startsWith("TM9000") && ! TM9100_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM9100 with HHCH
             if ( radioInfo["MODEL"].startsWith("TM9100") && ! TM9100_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM9155
-            if ( radioInfo["MODEL"].startsWith("TM9300") && ! TM9300_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM9300
             if ( radioInfo["MODEL"].startsWith("TP9100") && ! TP9100_FEATURES.contains(varCmd) ) { continue; }  // Covers the TP9100 HH
+            if ( radioInfo["MODEL"].startsWith("TM9300") && ! TM9300_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM9300
+            if ( radioInfo["MODEL"].startsWith("TP9300") && ! TP9300_FEATURES.contains(varCmd) ) { continue; }  // Covers the TP9300 HH
+            if ( radioInfo["MODEL"].startsWith("TM9400") && ! TM9400_FEATURES.contains(varCmd) ) { continue; }  // Covers the TM9400
+            if ( radioInfo["MODEL"].startsWith("TP9400") && ! TP9400_FEATURES.contains(varCmd) ) { continue; }  // Covers the TP9400 HH
         }
         tmpStr = taitChecksum("02" + varCmd);
         tmpStr.prepend("f");
@@ -413,55 +422,59 @@ void MainWindow::LoadConfiguration() {
     taitFeatures.insert("08", "TMAS018 - TDMA Support (8xxx)");
     taitFeatures.insert("09", "TMAS019 - Conventional Call Queuing (8xxx) / TBAS055 - Transmit Enable (TB9100)");
     taitFeatures.insert("0A", "TMAS020 - Lone Worker Support");
-    taitFeatures.insert("14", "TMAS050 - P25 Common Air Interface");
-    taitFeatures.insert("15", "TMAS051 - P25 Administrator Services");
+    taitFeatures.insert("14", "TxAS050 - P25 Common Air Interface");
+    taitFeatures.insert("15", "TxAS051 - P25 Administrator Services");
     taitFeatures.insert("16", "TMAS052 - P25 Graphical C/Head Operation");
-    taitFeatures.insert("17", "TMAS053 - Single DES Encryption & Key Loading");
-    taitFeatures.insert("18", "TMAS054 - P25 Base OTAR Re-Keying");
-    taitFeatures.insert("19", "TMAS055 - P25 Trunking Services");
-    taitFeatures.insert("1A", "TMAS056 - P25 User IP Data");
-    taitFeatures.insert("1B", "TMAS057 - P25 DES Encryption & Key Loading");
-    taitFeatures.insert("1C", "TMAS058 - P25 AES Encryption (req TMAS057)");
-    taitFeatures.insert("1D", "TMAS059 - MDC1200");
-    taitFeatures.insert("1E", "TMAS060 - Tait Radio API");
-    taitFeatures.insert("1F", "TMAS061 - P25 Protocol API");
+    taitFeatures.insert("17", "TxAS053 - Single DES Encryption & Key Loading");
+    taitFeatures.insert("18", "TxAS054 - P25 Base OTAR Re-Keying");
+    taitFeatures.insert("19", "TxAS055 - P25 Trunking Services");
+    taitFeatures.insert("1A", "TxAS056 - User IP Data");
+    taitFeatures.insert("1B", "TxAS057 - P25 DES Encryption & Key Loading");
+    taitFeatures.insert("1C", "TxAS058 - AES Encryption");
+    taitFeatures.insert("1D", "TxAS059 - MDC1200");
+    taitFeatures.insert("1E", "TxAS060 - Tait Radio API");
+    taitFeatures.insert("1F", "TxAS061 - Protocol API");
     taitFeatures.insert("20", "TMAS062 - P25 Digital Crossband");
-    taitFeatures.insert("21", "TMAS063 - P25 DLI / Trunked OTAR");
-    taitFeatures.insert("22", "TMAS064 - P25 Trunked PSTN");
-    taitFeatures.insert("23", "TMAS065 - 2-Tone Decode");
+    taitFeatures.insert("21", "TxAS063 - P25 DLI / Trunked OTAR");
+    taitFeatures.insert("22", "TxAS064 - P25 Trunked PSTN");
+    taitFeatures.insert("23", "TxAS065 - 2-Tone Decode");
     taitFeatures.insert("24", "TMAS066 - Reserved (P25 Diagnostic Menu)");
-    taitFeatures.insert("25", "TMAS067 - GPS Transmission");
+    taitFeatures.insert("25", "TxAS067 - GPS Transmission");
     taitFeatures.insert("26", "TMAS068 - TM9000 Multi-Body Support");
     taitFeatures.insert("27", "TMAS069 - TM9000 Multi-Head Support");
     taitFeatures.insert("28", "TMAS070 - APCO TCI");
-    taitFeatures.insert("29", "TMAS071 - GPS Logging");
-    taitFeatures.insert("2A", "TMAS072 - Alphanumeric ID");
-    taitFeatures.insert("2B", "TMAS073 - Emergency Acknowledgement");
+    taitFeatures.insert("29", "TxAS071 - GPS/Location Logging");
+    taitFeatures.insert("2A", "TxAS072 - Alphanumeric ID");
+    taitFeatures.insert("2B", "TxAS073 - Emergency Acknowledgement");
     taitFeatures.insert("2C", "TMAS074 - Terminal Repeater Detection Collision Avoidance");
-    taitFeatures.insert("2D", "TPAS075 - OTAP (Over-The-Air Programming)");
+    taitFeatures.insert("2D", "TxAS075 - OTAP (Over-The-Air Programming)");
     taitFeatures.insert("30", "TPAS078 - Tait Radio API");
     taitFeatures.insert("32", "TPAS080 - DMR Trunking Digital");
     taitFeatures.insert("33", "TPAS081 - GPS Hardware Location Services");
     taitFeatures.insert("34", "TPAS082 - Bluetooth");
-    taitFeatures.insert("35", "TMAS083 - 20/25kHz Unrestricted Wideband");
+    taitFeatures.insert("35", "TxAS083 - 20/25kHz Unrestricted Wideband");
     taitFeatures.insert("36", "TPAS084 - WiFi");
     taitFeatures.insert("38", "TPAS086 - Enhanced Channel Capacity");
     taitFeatures.insert("39", "TPAS087 - Voice Annunciations");
     taitFeatures.insert("3A", "TMAS088 - P25 Digital Crossband Remote Control");
-    taitFeatures.insert("3B", "TMAS089 - Enhanced Location Reporting");
-    taitFeatures.insert("3F", "TMAS093 - Keyloading");
+    taitFeatures.insert("3B", "TxAS089 - Enhanced Location Reporting");
+    taitFeatures.insert("3D", "TxAS091 - P25 Phase 2 Trunking");
+    taitFeatures.insert("3E", "TxAS092 - 5-Tone Selcall");
+    taitFeatures.insert("3F", "TxAS093 - Keyloading");
     taitFeatures.insert("40", "TPAS094 - Unrestricted Dist DES Encryption (9335,9337)");
     taitFeatures.insert("41", "TPAS095 - DES Encryption (9355,9357)");
     taitFeatures.insert("43", "TPAS097 - DMR Conventional");
     taitFeatures.insert("44", "TPAS098 - Trunked GPS Transmission");
     taitFeatures.insert("45", "TPAS099 - BIOLINK");
-    taitFeatures.insert("48", "TPAS102 - ARC4 Encryption");
-    taitFeatures.insert("49", "TPAS103 - Radio Logging");
+    taitFeatures.insert("46", "TPAS100 - Link Layer Authentication");
+    taitFeatures.insert("48", "TxAS102 - ARC4 Encryption");
+    taitFeatures.insert("49", "TxAS103 - Radio Logging");
     taitFeatures.insert("4A", "TPAS104 - Extended Hunt List Capacity");
     taitFeatures.insert("4B", "TPAS105 - Geofencing Services");
     taitFeatures.insert("4C", "TMAS106 - File Transfer Services");
     taitFeatures.insert("4D", "TPAS107 - Embedded GPS Decoding");
     taitFeatures.insert("4E", "TMAS108 - Unify API");
+    taitFeatures.insert("4F", "TMAS109 - Single Privacy Key");
     taitFeatures.insert("64", "TMAS130 - Tait Internal 4");
     taitFeatures.insert("65", "TMAS131 - Tait Internal D");
     taitQueryOrder.clear();         // Lets autofill in numeric order. QHash randomly changes the order of items and that irritates me.
@@ -528,7 +541,7 @@ void MainWindow::on_actionApplication_triggered(){
     QMessageBox about;
     QPixmap pix(":/9100a.jpg");
     about.setText(QApplication::applicationName() + " " + QApplication::applicationVersion());
-    about.setInformativeText("Developed January 2018\nModel Support :\n- TM82xx\n- TM91xx\n");
+    about.setInformativeText("Developed January 2018\nModels Supported :\n- TM82xx\n- TM91xx\n- TP91xx\n- TM93xx\n- TP93xx\n- TM94xx\n- TP94xx\n");
     about.setStandardButtons(QMessageBox::Ok);
     about.setDefaultButton(QMessageBox::Ok);
     about.setIconPixmap(pix.scaled(400,400,Qt::KeepAspectRatio));
